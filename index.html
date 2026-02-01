@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FATKID Onboarding - Mama Booza</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .form-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .form-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .form-header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .form-content {
+            padding: 40px;
+        }
+        
+        .form-page {
+            display: none;
+        }
+        
+        .form-page.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .required {
+            color: #e74c3c;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .credentials-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+        
+        .credentials-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+        
+        .file-upload {
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            background: #f8f9ff;
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload:hover {
+            background: #f0f2ff;
+            border-color: #5a67d8;
+        }
+        
+        .file-upload input[type="file"] {
+            display: none;
+        }
+        
+        .file-upload label {
+            color: #667eea;
+            font-weight: 600;
+            cursor: pointer;
+            display: block;
+        }
+        
+        .progress-bar {
+            background: #e1e8ed;
+            height: 6px;
+            border-radius: 3px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar .progress {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        .page-title {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .page-description {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .form-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e8ed;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #e1e8ed;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #d1d9e0;
+        }
+        
+        .page-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e1e8ed;
+            margin: 0 5px;
+            transition: background 0.3s ease;
+        }
+        
+        .page-dot.active {
+            background: #667eea;
+        }
+        
+        .page-dot.completed {
+            background: #27ae60;
+        }
+        
+        .service-package {
+            background: #f8f9fa;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .service-package:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .service-package.selected {
+            border-color: #667eea;
+            background: #f8f9ff;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .service-package h4 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .service-package p {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        .service-features {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e1e8ed;
+        }
+        
+        .service-features li {
+            color: #555;
+            margin: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .service-features li:before {
+            content: "✓";
+            color: #27ae60;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .form-content {
+                padding: 20px;
+            }
+            
+            .form-header {
+                padding: 30px 20px;
+            }
+            
+            .form-header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <h1>🚀 FATKID</h1>
+            <p>Professional Onboarding - Mama Booza</p>
+        </div>
+        
+        <div class="form-content">
+            <div class="page-indicator">
+                <div class="page-dot active"></div>
+                <div class="page-dot"></div>
+                <div class="page-dot"></div>
+                <div class="page-dot"></div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress" style="width: 25%"></div>
+            </div>
+            
+            <form id="onboardingForm">
+                <!-- Page 1: Basic Information -->
+                <div class="form-page active" data-page="1">
+                    <h2 class="page-title">Welcome to FATKID! 👋</h2>
+                    <p class="page-description">Let's get started with your onboarding. We'll collect all the information needed to optimize your restaurant's performance across all delivery platforms.</p>
+                    
+                    <div class="form-group">
+                        <label for="companyName">Company Name <span class="required">*</span></label>
+                        <input type="text" id="companyName" name="companyName" value="Mama Booza" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Primary Email <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number <span class="required">*</span></label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tradeLicense">Trade License Number <span class="required">*</span></label>
+                            <input type="text" id="tradeLicense" name="tradeLicense" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="vatNumber">VAT Registration Number</label>
+                            <input type="text" id="vatNumber" name="vatNumber">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Service Package <span class="required">*</span></label>
+                        
+                        <div class="service-package selected" data-package="full">
+                            <h4>📊 Full Brand Management Package</h4>
+                            <p>Complete brand management with delivery optimization - Perfect for Mama Booza's growth needs</p>
+                            <ul class="service-features">
+                                <li>All delivery platform optimization</li>
+                                <li>POS system integration</li>
+                                <li>Dine-in analytics</li>
+                                <li>P&L analysis & reporting</li>
+                                <li>Brand strategy development</li>
+                                <li>Dedicated account management</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Page 2: Platform Credentials -->
+                <div class="form-page" data-page="2">
+                    <h2 class="page-title">🔐 Platform Access</h2>
+                    <p class="page-description">Please provide access credentials to your delivery platforms. This information is encrypted and securely stored.</p>
+                    
+                    <div class="credentials-section">
+                        <h3>🍕 Delivery Platform Credentials</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="talabatEmail">Talabat - Email/Login</label>
+                                <input type="email" id="talabatEmail" name="talabatEmail">
+                            </div>
+                            <div class="form-group">
+                                <label for="talabatPassword">Talabat - Password</label>
+                                <input type="password" id="talabatPassword" name="talabatPassword">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="deliverooEmail">Deliveroo - Email/Login</label>
+                                <input type="email" id="deliverooEmail" name="deliverooEmail">
+                            </div>
+                            <div class="form-group">
+                                <label for="deliverooPassword">Deliveroo - Password</label>
+                                <input type="password" id="deliverooPassword" name="deliverooPassword">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="noonEmail">Noon Food - Email/Login</label>
+                                <input type="email" id="noonEmail" name="noonEmail">
+                            </div>
+                            <div class="form-group">
+                                <label for="noonPassword">Noon Food - Password</label>
+                                <input type="password" id="noonPassword" name="noonPassword">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="careemEmail">Careem Now - Email/Login</label>
+                                <input type="email" id="careemEmail" name="careemEmail">
+                            </div>
+                            <div class="form-group">
+                                <label for="careemPassword">Careem Now - Password</label>
+                                <input type="password" id="careemPassword" name="careemPassword">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="credentials-section">
+                        <h3>💳 POS System Access</h3>
+                        
+                        <div class="form-group">
+                            <label for="posSystem">POS System Name</label>
+                            <input type="text" id="posSystem" name="posSystem" placeholder="e.g., Square, Toast, Clover">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="posLogin">POS Login/Email</label>
+                                <input type="text" id="posLogin" name="posLogin">
+                            </div>
+                            <div class="form-group">
+                                <label for="posPassword">POS Password</label>
+                                <input type="password" id="posPassword" name="posPassword">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Page 3: Document Uploads -->
+                <div class="form-page" data-page="3">
+                    <h2 class="page-title">📁 Required Documents</h2>
+                    <p class="page-description">Upload the following documents to help us analyze your current performance and optimize your operations.</p>
+                    
+                    <div class="form-group">
+                        <label>Current Menu (Excel/PDF format)</label>
+                        <div class="file-upload">
+                            <input type="file" id="menuDocument" name="menuDocument" accept=".pdf,.xls,.xlsx">
+                            <label for="menuDocument">
+                                📄 Click to upload menu or drag & drop<br>
+                                <small>Accepted formats: PDF, Excel</small>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>12-Month Historical Sales Data</label>
+                        <div class="file-upload">
+                            <input type="file" id="salesData" name="salesData" accept=".pdf,.xls,.xlsx,.csv">
+                            <label for="salesData">
+                                📊 Click to upload sales data or drag & drop<br>
+                                <small>Accepted formats: PDF, Excel, CSV</small>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>P&L Statements (Last 12 months)</label>
+                        <div class="file-upload">
+                            <input type="file" id="plStatements" name="plStatements" accept=".pdf,.xls,.xlsx" multiple>
+                            <label for="plStatements">
+                                💰 Click to upload P&L statements or drag & drop<br>
+                                <small>Multiple files accepted: PDF, Excel</small>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Dine-in Sales Data</label>
+                        <div class="file-upload">
+                            <input type="file" id="dineInSales" name="dineInSales" accept=".pdf,.xls,.xlsx,.csv">
+                            <label for="dineInSales">
+                                🏪 Click to upload dine-in data or drag & drop<br>
+                                <small>Accepted formats: PDF, Excel, CSV</small>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Page 4: Team Contacts & Review -->
+                <div class="form-page" data-page="4">
+                    <h2 class="page-title">👥 Team Contacts & Final Review</h2>
+                    <p class="page-description">Provide key team member contacts for smooth collaboration and review your submission.</p>
+                    
+                    <div class="form-group">
+                        <label for="managementContacts">Management Team Contacts</label>
+                        <textarea id="managementContacts" name="managementContacts" rows="3" placeholder="Names, roles, email addresses, phone numbers"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="operationalContacts">Kitchen/Operations Team</label>
+                        <textarea id="operationalContacts" name="operationalContacts" rows="3" placeholder="Chef, Kitchen Manager, Operations Manager contacts"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="marketingContacts">Marketing Team Contacts</label>
+                        <textarea id="marketingContacts" name="marketingContacts" rows="3" placeholder="Marketing Manager, Social Media Manager contacts"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="additionalNotes">Additional Notes or Special Requirements</label>
+                        <textarea id="additionalNotes" name="additionalNotes" rows="4" placeholder="Any specific requirements, concerns, or information we should know"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="timeline">Preferred Timeline for Service Initiation</label>
+                        <select id="timeline" name="timeline">
+                            <option value="">Select timeline...</option>
+                            <option value="immediate">Immediate (1-3 days)</option>
+                            <option value="week">Within 1 week</option>
+                            <option value="month">Within 1 month</option>
+                            <option value="flexible">Flexible</option>
+                        </select>
+                    </div>
+                    
+                    <div class="credentials-section">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" required style="margin-right: 10px;">
+                                I confirm that all information provided is accurate and complete <span class="required">*</span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" required style="margin-right: 10px;">
+                                I authorize FATKID to access the provided platforms for optimization purposes <span class="required">*</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="form-buttons">
+                <button type="button" class="btn btn-secondary" id="prevBtn" onclick="previousPage()">← Previous</button>
+                <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextPage()">Next →</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentPage = 1;
+        const totalPages = 4;
+        
+        function updateProgress() {
+            const progress = (currentPage / totalPages) * 100;
+            document.querySelector('.progress').style.width = progress + '%';
+            
+            // Update page dots
+            const dots = document.querySelectorAll('.page-dot');
+            dots.forEach((dot, index) => {
+                if (index + 1 < currentPage) {
+                    dot.className = 'page-dot completed';
+                } else if (index + 1 === currentPage) {
+                    dot.className = 'page-dot active';
+                } else {
+                    dot.className = 'page-dot';
+                }
+            });
+        }
+        
+        function showPage(page) {
+            document.querySelectorAll('.form-page').forEach(p => p.classList.remove('active'));
+            document.querySelector(`[data-page="${page}"]`).classList.add('active');
+            
+            document.getElementById('prevBtn').style.display = page === 1 ? 'none' : 'block';
+            document.getElementById('nextBtn').textContent = page === totalPages ? 'Submit Form 🚀' : 'Next →';
+            
+            updateProgress();
+        }
+        
+        function nextPage() {
+            if (currentPage === totalPages) {
+                submitForm();
+                return;
+            }
+            
+            if (validateCurrentPage()) {
+                currentPage++;
+                showPage(currentPage);
+            }
+        }
+        
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                showPage(currentPage);
+            }
+        }
+        
+        function validateCurrentPage() {
+            const currentPageElement = document.querySelector(`[data-page="${currentPage}"]`);
+            const requiredInputs = currentPageElement.querySelectorAll('input[required], select[required]');
+            
+            for (let input of requiredInputs) {
+                if (!input.value.trim()) {
+                    input.focus();
+                    alert('Please fill in all required fields before continuing.');
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        function submitForm() {
+            if (!validateCurrentPage()) return;
+            
+            // Show success message
+            alert('🎉 Form submitted successfully! The FATKID team will contact you within 24 hours to begin your onboarding process.');
+            
+            // In real implementation, this would send data to Google Sheets + Gmail
+            console.log('Form data:', new FormData(document.getElementById('onboardingForm')));
+        }
+        
+        // File upload handling
+        document.querySelectorAll('input[type="file"]').forEach(input => {
+            input.addEventListener('change', function() {
+                const label = this.nextElementSibling;
+                const fileName = this.files[0]?.name || 'Click to upload or drag & drop';
+                label.innerHTML = this.files[0] ? 
+                    `✅ ${fileName}<br><small>File uploaded successfully</small>` : 
+                    label.innerHTML;
+            });
+        });
+        
+        // Service package selection
+        document.querySelectorAll('.service-package').forEach(pkg => {
+            pkg.addEventListener('click', function() {
+                document.querySelectorAll('.service-package').forEach(p => p.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+        
+        // Initialize
+        showPage(1);
+    </script>
+</body>
+</html>
